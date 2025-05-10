@@ -3,7 +3,6 @@
 A powerful Python-based desktop application that securely **hides, encrypts, and decodes secret messages** using advanced techniques like **steganography, QR codes, barcodes, and Morse code** — all through a clean and intuitive GUI.
 
 ![Python](https://img.shields.io/badge/Built%20With-Python-blue)
-![License](https://img.shields.io/badge/License-MIT-green)
 ![GUI](https://img.shields.io/badge/Interface-Tkinter-yellow)
 
 ---
@@ -35,6 +34,9 @@ A powerful Python-based desktop application that securely **hides, encrypts, and
 ## 📷 Screenshots
 
 ![Screenshot 2025-05-10 212821](https://github.com/user-attachments/assets/a95b9430-e4aa-4283-8bb4-373dad8dd4dd)
+![Screenshot 2025-05-10 213602](https://github.com/user-attachments/assets/e0e755a9-6238-4ebf-ae7b-009a2fdd8060)
+![image](https://github.com/user-attachments/assets/f629b05c-2ad7-4631-8620-3ddfcd06fc87)
+
 
 
 ---
