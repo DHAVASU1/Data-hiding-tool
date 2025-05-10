@@ -1,0 +1,72 @@
+import tkinter as tk
+from tkinter import messagebox
+import webbrowser
+from subprocess import call
+
+# Function to open the selected URL
+def open_url():
+    selected_option = var.get()
+    if selected_option == 1:
+        webbrowser.open("https://www.example.com/page1")
+    elif selected_option == 2:
+        webbrowser.open("https://www.example.com/page2")
+    elif selected_option == 3:
+        webbrowser.open("https://www.example.com/page3")
+    else:
+        messagebox.showerror("Error", "Please select an option.")
+
+def open_py_file():
+    selected_option = var.get()
+    if selected_option == 1:
+        call(["python", "endetext.py"])
+    elif selected_option == 2:
+        call(["python", "QR_code.py"])
+    elif selected_option == 3:
+        call(["python", "texttoimage.py"])
+    elif selected_option == 4:
+        call(["python", "bar_code.py"])
+    elif selected_option == 5:
+        call(["python", "endetext.py"])
+
+# Create the main window
+root = tk.Tk()
+root.title("options")
+
+# Load the background image (replace 'background.jpg' with your image file)
+background_image = tk.PhotoImage(file="options.png")
+
+# Create a Label with the background image and place it on the window
+background_label = tk.Label(root, image=background_image)
+background_label.place(relwidth=1, relheight=1)
+
+# Create a variable to hold the selected option
+var = tk.IntVar()
+
+# Create radio buttons for different options
+option1 = tk.Radiobutton(root, text="Perform Ecryption and decrption of text", variable=var, value=1)
+option2 = tk.Radiobutton(root, text="Build QR code of data", variable=var, value=2)
+option3 = tk.Radiobutton(root, text="Convert text into image ", variable=var, value=3)
+option4 = tk.Radiobutton(root, text="Build Bar code of data", variable=var, value=4)
+option5 = tk.Radiobutton(root, text="Option 5", variable=var, value=5)
+
+# Create a button to open the selected URL
+open_button = tk.Button(root, text="More information", command=open_url)
+open_button2 = tk.Button(root, text="Perform", command=open_py_file)
+
+input_label = tk.Label(root, text="Select any method to Hide Data:", font=("arial", 15, "bold"))
+input_label.grid(row=0, column=0, pady=10)
+
+# Center all widgets using the grid layout
+option1.grid(row=1, column=0, padx=200, pady=20)
+option2.grid(row=2, column=0, padx=200, pady=20)
+option3.grid(row=3, column=0, padx=200, pady=20)
+option4.grid(row=4, column=0, padx=200, pady=20)
+option5.grid(row=5, column=0, padx=200, pady=20)
+open_button.grid(row=6, column=0, padx=10, pady=10)
+open_button2.grid(row=6, column=2, padx=10, pady=10)
+
+
+# Set the screen size
+root.geometry("760x600")
+
+root.mainloop()

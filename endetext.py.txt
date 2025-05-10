@@ -1,0 +1,89 @@
+import tkinter as tk
+from tkinter import messagebox
+from subprocess import call
+
+
+def encrypt_message():
+    message = input_text.get()
+    shift = int(shift_entry.get())
+
+    encrypted_message = ""
+    for char in message:
+        if char.isalpha():
+            shift_amount = shift % 26
+            if char.islower():
+                shifted_char = chr(((ord(char) - ord('a') + shift_amount) % 26) + ord('a'))
+            else:
+                shifted_char = chr(((ord(char) - ord('A') + shift_amount) % 26) + ord('A'))
+            encrypted_message += shifted_char
+        else:
+            encrypted_message += char
+
+    output_text.set(encrypted_message)
+
+
+def decrypt_message():
+    encrypted_message = input_text.get()
+    shift = int(shift_entry.get())
+
+    decrypted_message = ""
+    for char in encrypted_message:
+        if char.isalpha():
+            shift_amount = shift % 26
+            if char.islower():
+                shifted_char = chr(((ord(char) - ord('a') - shift_amount) % 26) + ord('a'))
+            else:
+                shifted_char = chr(((ord(char) - ord('A') - shift_amount) % 26) + ord('A'))
+            decrypted_message += shifted_char
+        else:
+            decrypted_message += char
+
+    output_text.set(decrypted_message)
+
+# Create the main window
+root = tk.Tk()
+root.title("Secret Message Encryption/Decryption")
+
+# Set the background color
+root.configure(bg="lightblue")
+
+# Set the screen size
+root.geometry("760x600")
+
+# Create and arrange widgets using grid
+empty_label = tk.Label(root, text="")
+empty_label.grid(row=0, column=0, pady=20, padx=380)
+
+input_label = tk.Label(root, text="Enter Message:", font=("arial", 15, "bold"))
+input_label.grid(row=1, column=0, pady=10)
+
+input_text = tk.Entry(root)
+input_text.grid(row=2, column=0, pady=10)
+
+shift_label = tk.Label(root, text="Key:", font=("arial", 15, "bold"))
+shift_label.grid(row=3, column=0, pady=10)
+
+shift_entry = tk.Entry(root)
+shift_entry.grid(row=4, column=0, pady=10)
+
+input_label = tk.Label(root, text="Choose Operation to perform on message:", font=("arial", 15, "bold"))
+input_label.grid(row=5, column=0, pady=10)
+
+encrypt_button = tk.Button(root, text="Encrypt", font=("arial", 15, "bold"), command=encrypt_message, fg="brown")
+encrypt_button.grid(row=6, column=0, pady=10)
+
+decrypt_button = tk.Button(root, text="Decrypt", font=("arial", 15, "bold"), command=decrypt_message, fg="brown")
+decrypt_button.grid(row=7, column=0, pady=10)
+
+empty_label2 = tk.Label(root, text="")
+empty_label2.grid(row=8, column=0, pady=10)
+
+output_label = tk.Label(root, text="Result:", font=("arial", 15, "bold"))
+output_label.grid(row=9, column=0, pady=10)
+
+output_text = tk.StringVar()
+output_text.set("")
+output_display = tk.Label(root, textvariable=output_text, font=("arial", 15, "bold"), fg="blue")
+output_display.grid(row=10, column=0, pady=10)
+
+root.mainloop()

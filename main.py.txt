@@ -1,0 +1,141 @@
+import turtle
+from turtle import Screen, Turtle
+import pygame
+import time
+from subprocess import call
+
+
+def play_music(file_path):
+    pygame.init()
+    pygame.mixer.init()
+    pygame.mixer.music.load('music.mp3')
+    pygame.mixer.music.play()
+
+
+if __name__ == "__main__":
+    music_file = "music.mp3"  # Replace with the path to your music file
+
+    play_music('music.mp3')
+
+color = (0.60160, 0, 0.99220)  # (154, 0, 254)
+target = (0.86330, 0.47660, 0.31255)  # (221, 122, 80)
+turtle.title("Data Hiding Tool")
+tur = Screen()
+tur.screensize(300, 300)
+tur.tracer(False)
+
+width, height = tur.window_width(), tur.window_height()
+
+deltas = [(hue - color[index]) / height for index, hue in enumerate(target)]
+
+turt = Turtle()
+turt.color(color)
+
+turt.penup()
+turt.goto(-width/2, height/2)
+turt.pendown()
+
+direct = 1
+
+for distance, y in enumerate(range(height//2, -height//2, -1)):
+
+    turt.forward(width * direct)
+    turt.color([color[i] + delta * distance for i, delta in enumerate(deltas)])
+    turt.sety(y)
+
+    direct *= -1
+tur.tracer(True)
+
+pen = turtle.Turtle()
+turt.pensize(2)
+# Draw the first circle
+pen.penup()
+pen.goto(-50, 0)
+pen.pendown()
+pen.begin_fill()
+pen.circle(100)
+pen.end_fill()
+
+# Draw the second circle with a different size
+pen.penup()
+pen.goto(-50, 20)
+pen.pendown()
+pen.color("grey")
+pen.begin_fill()
+pen.circle(80)
+pen.end_fill()
+
+pen.penup()
+pen.goto(-0, 20)
+pen.setheading(140)
+pen.pendown()
+pen.color("black")
+pen.begin_fill()
+pen.forward(-200)  # Draw the top or bottom side (change the length as needed)
+pen.right(90)  # Turn 90 degrees to create a corner
+pen.forward(30)  # Draw the left or right side (change the length as needed)
+pen.right(90)
+pen.forward(-200)  # Draw the top or bottom side (change the length as needed)
+pen.right(90)  # Turn 90 degrees to create a corner
+pen.forward(30)  # Draw the left or right side (change the length as needed)
+pen.right(90)
+pen.end_fill()
+
+
+# Function to check if a point is inside the button's boundaries
+def is_inside_button(x, y):
+    return -200 < x < 200 and -200 < y < 200
+
+
+def open_py_file():
+    call(["python", "options.py"])
+
+
+# Function to draw a button
+def draw_button():
+
+    # Write button text
+
+    turtle.penup()
+    turtle.goto(80, 50)
+    turtle.pendown()
+    turtle.write("DATA HIDING TOOL", font=("Arial", 23, "bold"))
+    turtle.penup()
+    turtle.goto(-290, 210)
+    turtle.pendown()
+    turtle.write("Click on magnifying glass")
+    turtle.penup()
+    turtle.goto(-290, 200)
+    turtle.pendown()
+    turtle.write("to start your journey")
+    turtle.penup()
+    turtle.goto(-300, -230)
+    turtle.pendown()
+    turtle.write("The art of hiding data in a file so that only the sender and intended recepient suspect the present of hidden data", font=("Arial", 10, "normal"))
+    turtle.penup()
+    turtle.goto(-300, -250)
+    turtle.pendown()
+    turtle.write("Data hiding involes changing or manipulating a file to conceal information ", font=("Arial", 10, "normal"))
+
+
+# Function to handle button clicks
+def on_button_click(x, y):
+    if is_inside_button(x, y):
+        call(["python", "options.py"])
+
+
+# Initialize the turtle screen
+turtle.setup(780, 600)
+turtle.bgcolor("white")
+turtle.title("Data Hiding Tool")
+
+# Draw the button
+draw_button()
+
+# Listen for button clicks
+turtle.onscreenclick(on_button_click)
+
+# Keep the window open
+turtle.done()
+
+tur.exitonclick()

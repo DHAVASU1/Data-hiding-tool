@@ -1,0 +1,58 @@
+from PIL import Image
+
+# Function to hide text within an image
+def hide_text_in_image(input_image, output_image, text_to_hide):
+    image = Image.open(input_image)
+    width, height = image.size
+    text_len = len(text_to_hide)
+
+    if text_len > (width * height):
+        raise ValueError("Text is too large to fit in the image")
+
+    text_index = 0
+
+    for y in range(height):
+        for x in range(width):
+            pixel = list(image.getpixel((x, y)))
+
+            if text_index < text_len:
+                pixel[0] = pixel[0] & 254 | (int(text_to_hide[text_index]) >> 7)
+                pixel[1] = pixel[1] & 254 | (int(text_to_hide[text_index]) >> 6 & 1)
+                pixel[2] = pixel[2] & 252 | (int(text_to_hide[text_index]) >> 5 & 3)
+                text_index += 1
+
+            image.putpixel((x, y), tuple(pixel))
+
+    image.save(output_image)
+
+# Function to extract and decrypt text from an image
+def extract_and_decrypt_text_from_image(input_image):
+    image = Image.open(input_image)
+    width, height = image.size
+
+    extracted_text = ""
+
+    for y in range(height):
+        for x in range(width):
+            pixel = list(image.getpixel(x, y))
+
+            text_byte = 0
+            text_byte |= (pixel[0] & 1) << 7
+            text_byte |= (pixel[1] & 1) << 6
+            text_byte |= (pixel[2] & 3) << 5
+
+            extracted_text += chr(text_byte)
+
+    return extracted_text
+
+# Example usage
+input_image = "options.png"
+output_image = "output.jpg"
+text_to_hide = "This is a secret message."
+
+# Hide the text within the image
+hide_text_in_image(input_image, output_image, text_to_hide)
+
+# Extract and decrypt the text from the image
+extracted_text = extract_and_decrypt_text_from_image(output_image)
+print("Extracted and decrypted text:", extracted_text)

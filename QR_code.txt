@@ -1,0 +1,73 @@
+import tkinter as tk
+from tkinter import filedialog, messagebox
+from PIL import Image, ImageTk
+from cryptography.fernet import Fernet
+import qrcode
+import numpy as np
+
+# Initialize the Tkinter application
+app = tk.Tk()
+app.title("QR Encryption ")
+
+# Generate a key for encryption
+key = Fernet.generate_key()
+cipher_suite = Fernet(key)
+
+# Function to encrypt text and generate a QR code
+def encrypt_text():
+    plaintext = plaintext_entry.get()
+    encrypted_text = cipher_suite.encrypt(plaintext.encode())
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(encrypted_text)
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="black", back_color="white")
+    img.save("QR.png")
+    img.thumbnail((300, 300))
+    img = ImageTk.PhotoImage(img)
+    encrypted_image_label.config(image=img)
+    encrypted_image_label.photo = img
+    messagebox.showinfo("Success", "Text encrypted and QR code generated")
+
+# Function to decrypt text from QR code
+def decrypt_text():
+    file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.png")])
+    if file_path:
+        img = Image.open(file_path)
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L
+        )
+        img = img.convert("1")  # Convert to 1-bit monochrome (bitmap)
+        img_data = np.array(list(img.getdata()))
+        img_data = img_data.reshape(img.height, img.width)
+        qr.add_data(img_data.tolist())
+        qr.make(fit=True)
+        qr_text = qr.make_image(fill_color="black", back_color="white").getdata()
+        decrypted_text = cipher_suite.decrypt(bytes(bytearray([p > 128 for p in qr_text])))
+        decrypted_text_label.config(text="Decrypted Text: " + decrypted_text.decode())
+
+# Create the GUI elements
+plaintext_label = tk.Label(app, text = "Enter text to encrypt:")
+plaintext_label.pack()
+
+plaintext_entry = tk.Entry(app)
+plaintext_entry.pack()
+
+encrypt_button = tk.Button(app, text="Encrypt and Generate QR", command=encrypt_text)
+encrypt_button.pack()
+
+decrypt_button = tk.Button(app, text="Decrypt QR Code", command=decrypt_text)
+decrypt_button.pack()
+
+decrypted_text_label = tk.Label(app, text="Decrypted Text:")
+decrypted_text_label.pack()
+
+encrypted_image_label = tk.Label(app)
+encrypted_image_label.pack()
+
+app.mainloop()

@@ -1,0 +1,65 @@
+import tkinter as tk
+from tkinter import filedialog, messagebox
+from tkinter import ttk
+import barcode
+from barcode import EAN13
+from barcode.writer import ImageWriter
+from PIL import Image, ImageTk
+
+# Initialize the Tkinter application
+app = tk.Tk()
+app.title("Barcode Generator and Decoder")
+
+# Function to generate a barcode
+def generate_barcode():
+    data = data_entry.get()
+    if data.isdigit() and len(data) == 12:
+        data = "0" + data  # Add a leading 0 to make it 13 digits if it's 12 digits
+        try:
+            code = EAN13(data, writer=ImageWriter())
+            code.save("barcode")
+            image = Image.open("barcode.png")
+            photo = ImageTk.PhotoImage(image)
+            barcode_label.config(image=photo)
+            barcode_label.photo = photo
+            messagebox.showinfo("Success", "Barcode generated successfully!")
+        except Exception as e:
+            messagebox.showerror("Error", f"An error occurred: {e}")
+    else:
+        messagebox.showerror("Error", "Please enter a valid 12-digit numeric barcode.")
+
+# Function to decode a numeric barcode
+def decode_barcode():
+    image_path = filedialog.askopenfilename(filetypes=[("Image files", "*.png")])
+    if image_path:
+        image = Image.open(image_path)
+        decoded_data = barcode.decode(image)
+        if decoded_data:
+            decoded_barcode_label.config(text="Decoded Barcode Data: " + decoded_data[0].data)
+        else:
+            decoded_barcode_label.config(text="Failed to decode the barcode.")
+
+# Create a label and entry for barcode data
+data_label = ttk.Label(app, text="Enter a 12-digit number:")
+data_label.pack()
+
+data_entry = ttk.Entry(app)
+data_entry.pack()
+
+# Create a button to generate the barcode
+generate_button = ttk.Button(app, text="Generate Barcode", command=generate_barcode)
+generate_button.pack()
+
+# Create a label to display the generated barcode
+barcode_label = ttk.Label(app)
+barcode_label.pack()
+
+# Create a button to decode the barcode
+decode_button = ttk.Button(app, text="Decode Barcode", command=decode_barcode)
+decode_button.pack()
+
+# Create a label to display the decoded barcode
+decoded_barcode_label = ttk.Label(app)
+decoded_barcode_label.pack()
+
+app.mainloop()
